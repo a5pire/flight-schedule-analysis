@@ -46,7 +46,9 @@ def main():
 
     with open(args.input, 'r') as fh:
 
-        for line in fh:
+        while True:
+
+            line = fh.readline()
 
             if line.isspace():
                 continue
@@ -98,6 +100,9 @@ def main():
                 trip_started = False
 
                 trip_list.append(trip)
+
+            if not line:
+                break
 
     with open(output_file, 'w') as fh:  # Convert everything (including datetime object) to string.
         fh.write(json.dumps(trip_list, default=str, indent=4))
