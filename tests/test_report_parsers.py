@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import datetime
 from parsers.report_parsers import Parser
 
