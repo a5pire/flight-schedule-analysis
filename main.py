@@ -59,11 +59,11 @@ def main():
             if '________' in line:
                 continue
 
-            if line.startswith('TRIP'):     # detect start of a trip
+            if line.startswith('TRIP'):     # detect start of a trip (anywhere from 1-5 days long)
                 # print('Start trip' + line)
 
-                trip = report_parsers.Parser.trip_parser(line)    # create a trip - dictionary
-                trip['days'] = []   # adds a day list to the trip list
+                trip = report_parsers.Parser.trip_parser(line)    # create a trip(dictionary)
+                trip['days'] = []   # adds a day list (a list of sectors(dictionaries)) to the trip list
 
                 trip_started = True     # sets trip started to true
                 continue
@@ -72,8 +72,8 @@ def main():
                 if not day_started:     # check the trip has started and the new day has not started
                     if report_parsers.Parser.new_day(line):    # if new day has not started, create a new day
                         day = {}    # create a new day dictionary on each new day
-                        day['sign_on'] = line[43:48]
-                        day['day_sectors'] = []
+                        day['sign_on'] = line[43:48]    # gets the sign on time for that day
+                        day['day_sectors'] = []     # creates an empty list for the sectors(dictionaries)
 
                         day_started = True  # sets day started to true
 
@@ -99,15 +99,15 @@ def main():
                     day_ordered = report_parsers.Parser.order_day(day)
                     trip['days'].append(day_ordered)
 
-            if not line[28:36].isspace() and line[27:35] == 'Sign_off':     # Detect end of a trip.
+            if not line[28:36].isspace() and line[27:35] == 'Sign_off':     # detect end of a trip
                 trip_started = False
 
-                trip_list.append(trip)
+                trip_list.append(trip)  # append the trip(dictionary) to the trip list
 
-    with open(output_file, 'w') as fh:  # Convert everything (including datetime object) to string.
-        fh.write(json.dumps(trip_list, default=str, indent=4))
+    with open(output_file, 'w') as fh:  # Convert everything (including datetime object) to string
+        fh.write(json.dumps(trip_list, default=str, indent=4))  # write to json file for output
 
-    display_data(output_file)
+    display_data(output_file)   # display analytics data within the terminal
 
     # add mongodb functionality here
 

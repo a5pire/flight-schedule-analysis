@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-
 import json
 from parsers import analytics_parsers
 
 
 def display_data(data_file):
+    """ Compile all the data from the analytics parsers and display information within the terminal window. """
 
     with open(data_file) as f:  # file type must be json
         analytics = json.load(f)
@@ -23,12 +23,12 @@ def display_data(data_file):
         max_fdp = fdp.max_fdp()
         print()
         print('*****  Operating FDPs rostered within 30 minutes of max AND'
-              ' paxing sectors between 12hrs and 16hrs *****')
+              ' positioning sectors totalling between 12hrs and 16hrs *****')
         for key, value in max_fdp.items():
             print(f'Trip: {key} \tDay: {value.day_number}\tDuty period: {value.fdp_hours}:{value.fdp_minutes}')
 
 ########################################################################################################################
-        # more than one paxing sector in a day
+        # more than one positioning sector in a day
         dual = analytics_parsers.AnalyticsParser(analytics)
         dual_paxing = dual.dual_paxing_days()
         print()
@@ -41,11 +41,11 @@ def display_data(data_file):
                 print(f'Trip: {key}\tDay: {value}')
 
 ########################################################################################################################
-        # paxing before or after a return
+        # positioning before or after a return
         pax = analytics_parsers.AnalyticsParser(analytics)
         three_sectors = pax.three_sector_days()
         print()
-        print('***** Paxing before or after a return *****')
+        print('***** Positioning before or after a return *****')
         if len(three_sectors) == 0:
             print(f'Zero three sector days')
         else:
@@ -89,7 +89,7 @@ def display_data(data_file):
         bne_overnights = overnights.overnights()
         print()
         print()
-        print('***** Trips with 1 BNE overnights *****')
+        print('***** Trips with 1 BNE overnight *****')
         for key, value in bne_overnights.items():
             if value == 1:
                 print(f'Trip Number: {key}')
