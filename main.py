@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-
 import argparse
 import sys
 import json
@@ -87,36 +86,35 @@ def main():
                         day['day_sectors'].append(report_parsers.Parser.sector_parser(line))    # append sector to day
 
                 else:   # if the day has ended, get the daily information
-                    day['sign_off'] = line[53:58]
-                    day['flight_duty_period'] = line[71:76].strip()
-                    flight_duty_split = day['flight_duty_period'].split('h')
-                    day['flight_duty_period_hours'] = int(flight_duty_split[0])
-                    day['flight_duty_period_minutes'] = int(flight_duty_split[1])
+                    day['sign_off'] = line[53:58].strip()   # get sign off time from line
+                    day['flight_duty_period'] = line[71:76].strip()     # get flight duty period
+                    flight_duty_split = day['flight_duty_period'].split('h')    # split flight duty period on 'h'
+                    day['flight_duty_period_hours'] = int(flight_duty_split[0])     # convert to hours
+                    day['flight_duty_period_minutes'] = int(flight_duty_split[1])   # convert to minutes
 
                     day_started = False     # sets day started to false
 
-            if not day_started and 'Sign_off' in line:
-                day['lay_over'] = '0h00'
-                lay_over_split = day['lay_over'].split('h')
-                day['lay_over_hours'] = int(lay_over_split[0])
-                day['lay_over_minutes'] = int(lay_over_split[1])
+            if not day_started and 'Sign_off' in line:  # indicated the day is finished and its only a single day trip
+                day['lay_over'] = '0h00'    # hard coded 0h00 layover as this is return flight from home base
+                day['lay_over_hours'] = 0   # hard coded 0 hours
+                day['lay_over_minutes'] = 0     # hard coded 0 minutes
 
+                # order the day using an OrderedDict, before adding it to the trip dict
                 day_ordered = report_parsers.Parser.order_day(day)
                 trip['days'].append(day_ordered)
 
-            elif not day_started and '--------------------------------' in line:
-                lay_over = line[88:93].strip()
-                day['lay_over'] = lay_over
-                lay_over_split = day['lay_over'].split('h')
-                day['lay_over_hours'] = int(lay_over_split[0])
-                day['lay_over_minutes'] = int(lay_over_split[1])
+            elif not day_started and '--------------------------------' in line:    # the day is over and now layover
+                lay_over = line[88:93].strip()  # get layover from line
+                day['lay_over'] = lay_over  # add to day dictionary
+                day['lay_over_hours'] = report_parsers.Parser.layover_split(lay_over)[0]    # split and convert to int
+                day['lay_over_minutes'] = report_parsers.Parser.layover_split(lay_over)[1]  # split and convert to int
 
                 # order the day using an OrderedDict, before adding it to the trip dict
                 day_ordered = report_parsers.Parser.order_day(day)
                 trip['days'].append(day_ordered)
 
             if not line[28:36].isspace() and line[27:35] == 'Sign_off':     # detect end of a trip
-                trip_started = False
+                trip_started = False    # set trip started to False
 
                 trip_list.append(trip)  # append the trip(dictionary) to the trip list
 
