@@ -86,3 +86,9 @@ class Parser:
         day_ordered['lay_over_minutes'] = day_ordered.pop('lay_over_minutes')
 
         return day_ordered
+
+    @staticmethod
+    def layover_split(layover):
+        hours = layover.split('h')[0]
+        minutes = layover.split('h')[1]
+        return int(hours), int(minutes)
