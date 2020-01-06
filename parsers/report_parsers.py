@@ -82,5 +82,7 @@ class Parser:
         day_ordered['flight_duty_period_hours'] = day_ordered.pop('flight_duty_period_hours')
         day_ordered['flight_duty_period_minutes'] = day_ordered.pop('flight_duty_period_minutes')
         day_ordered['lay_over'] = day_ordered.pop('lay_over')
+        day_ordered['lay_over_hours'] = day_ordered.pop('lay_over_hours')
+        day_ordered['lay_over_minutes'] = day_ordered.pop('lay_over_minutes')
 
         return day_ordered

@@ -95,16 +95,21 @@ def main():
 
                     day_started = False     # sets day started to false
 
-            ###########################################################################################################
             if not day_started and 'Sign_off' in line:
                 day['lay_over'] = '0h00'
+                lay_over_split = day['lay_over'].split('h')
+                day['lay_over_hours'] = int(lay_over_split[0])
+                day['lay_over_minutes'] = int(lay_over_split[1])
+
                 day_ordered = report_parsers.Parser.order_day(day)
                 trip['days'].append(day_ordered)
 
             elif not day_started and '--------------------------------' in line:
                 lay_over = line[88:93].strip()
                 day['lay_over'] = lay_over
-            ###########################################################################################################
+                lay_over_split = day['lay_over'].split('h')
+                day['lay_over_hours'] = int(lay_over_split[0])
+                day['lay_over_minutes'] = int(lay_over_split[1])
 
                 # order the day using an OrderedDict, before adding it to the trip dict
                 day_ordered = report_parsers.Parser.order_day(day)
