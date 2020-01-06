@@ -118,8 +118,10 @@ class TestReportParsers:
     def test_ordered_day(self):
         day_one = Parser()
         result = day_one.order_day({
+                "flight_duty_period_minutes": 0,
                 "day_number": 2,
                 "sign_on": "05:15",
+                "lay_over": "18h50",
                 "day_sectors": [
                     {
                         "flight_number": "00094",
@@ -132,11 +134,12 @@ class TestReportParsers:
                         "is_position_flight": False
                     }
                 ],
+                "lay_over_minutes": 50,
                 "sign_off": "10:15",
-                "flight_duty_period": "7h00",
                 "flight_duty_period_hours": 7,
-                "flight_duty_period_minutes": 0
-            }
+                "flight_duty_period": "7h00",
+                "lay_over_hours": 18
+        }
         )
 
         assert result == {
@@ -157,5 +160,25 @@ class TestReportParsers:
                     "sign_off": "10:15",
                     "flight_duty_period": "7h00",
                     "flight_duty_period_hours": 7,
-                    "flight_duty_period_minutes": 0
-                }
+                    "flight_duty_period_minutes": 0,
+                    "lay_over": "18h50",
+                    "lay_over_hours": 18,
+                    "lay_over_minutes": 50
+        }
+
+    def test_layover_split(self):
+        zero_layover = Parser()
+        layover_time = '0h00'
+        zero_result_hours = zero_layover.layover_split(layover_time)[0]
+        zero_result_minutes = zero_layover.layover_split(layover_time)[1]
+
+        layover = Parser()
+        layover_time = '23h50'
+        result_hours = layover.layover_split(layover_time)[0]
+        result_minutes = layover.layover_split(layover_time)[1]
+
+        assert zero_result_hours == 0
+        assert zero_result_minutes == 0
+
+        assert result_hours == 23
+        assert result_minutes == 50
