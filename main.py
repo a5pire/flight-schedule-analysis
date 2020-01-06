@@ -95,9 +95,20 @@ def main():
 
                     day_started = False     # sets day started to false
 
-                    # order the day using an OrderedDict, before adding it to the trip dict
-                    day_ordered = report_parsers.Parser.order_day(day)
-                    trip['days'].append(day_ordered)
+            ###########################################################################################################
+            if not day_started and 'Sign_off' in line:
+                day['lay_over'] = '0h00'
+                day_ordered = report_parsers.Parser.order_day(day)
+                trip['days'].append(day_ordered)
+
+            elif not day_started and '--------------------------------' in line:
+                lay_over = line[88:93].strip()
+                day['lay_over'] = lay_over
+            ###########################################################################################################
+
+                # order the day using an OrderedDict, before adding it to the trip dict
+                day_ordered = report_parsers.Parser.order_day(day)
+                trip['days'].append(day_ordered)
 
             if not line[28:36].isspace() and line[27:35] == 'Sign_off':     # detect end of a trip
                 trip_started = False
