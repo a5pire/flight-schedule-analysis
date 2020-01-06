@@ -108,3 +108,6 @@ def display_data(data_file):
         for key, value in bne_overnights.items():
             if value > 3:
                 print(f'Trip Number: {key}')
+########################################################################################################################
+
+        print()

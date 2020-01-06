@@ -2,6 +2,7 @@
 import argparse
 import sys
 import json
+from timer import Timer
 from parsers import report_parsers
 from display import display_data
 
@@ -9,6 +10,7 @@ from display import display_data
 OUTPUT_DEFAULT = 'output_file.json'
 
 
+@Timer()
 def main():
 
     parser = argparse.ArgumentParser(description='Process input file and save to output file.')
