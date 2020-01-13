@@ -2,9 +2,11 @@
 import argparse
 import sys
 import json
+from pymongo import MongoClient
 from timer import Timer
 from parsers import report_parsers
 from display import display_data
+from mongo import database_insertion
 
 
 OUTPUT_DEFAULT = 'output_file.json'
@@ -125,8 +127,10 @@ def main():
 
     display_data(output_file)   # display analytics data within the terminal
 
-    # add mongodb functionality here
+    return output_file
 
 
 if __name__ == '__main__':
     main()
+    print()
+    database_insertion(main())
