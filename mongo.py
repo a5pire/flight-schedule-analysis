@@ -1,3 +1,4 @@
+import os
 import json
 import time
 from pymongo import MongoClient
@@ -8,7 +9,7 @@ def database_insertion(json_file):
     with open(json_file) as f:
         database_input_file = json.load(f)
 
-        cluster = MongoClient("mongodb+srv://a5pire:PW7XxSS23mg3tSLX@pairings-d8pll.gcp.mongodb.net/"
+        cluster = MongoClient(f"mongodb+srv://a5pire:{os.environ['mongo']}@pairings-d8pll.gcp.mongodb.net/"
                               "test?retryWrites=true&w=majority")
         db = cluster['pairings']
         print()
