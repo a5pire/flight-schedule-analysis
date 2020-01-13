@@ -2,14 +2,17 @@ import os
 import json
 import time
 from pymongo import MongoClient
+from dotenv import load_dotenv
 
 
 def database_insertion(json_file):
 
+    load_dotenv()
+
     with open(json_file) as f:
         database_input_file = json.load(f)
 
-        cluster = MongoClient(f"mongodb+srv://a5pire:{os.environ['mongo']}@pairings-d8pll.gcp.mongodb.net/"
+        cluster = MongoClient(f"mongodb+srv://a5pire:{os.getenv('mongo')}@pairings-d8pll.gcp.mongodb.net/"
                               "test?retryWrites=true&w=majority")
         db = cluster['pairings']
         print()
@@ -22,3 +25,4 @@ def database_insertion(json_file):
         end = time.perf_counter()
 
         print(f'Completed in {round((end - start), 4)} seconds')
+        print()
