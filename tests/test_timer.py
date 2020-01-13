@@ -151,4 +151,3 @@ class TestTimer:
         t.start()
         with pytest.raises(TimerError):
             t.start()
-
