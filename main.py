@@ -2,8 +2,7 @@
 import argparse
 import sys
 import json
-from pymongo import MongoClient
-from timer import Timer
+from parsers.timer import Timer
 from parsers import report_parsers
 from display import display_data
 from mongo import database_insertion
