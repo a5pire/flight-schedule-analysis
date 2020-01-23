@@ -133,7 +133,8 @@ class AnalyticsParser:
                         trip_number = trip['trip_number']
                         difference_hours = day['lay_over_hours'] - day['flight_duty_period_hours']
                         difference_minutes = day['lay_over_minutes'] - day['flight_duty_period_minutes']
-                        template = rest_periods(day_number=day['day_number'], hours=difference_hours, minutes=difference_minutes)
+                        template = rest_periods(day_number=day['day_number'], hours=difference_hours,
+                                                minutes=difference_minutes)
                         trips[trip_number] = template
 
         return trips
