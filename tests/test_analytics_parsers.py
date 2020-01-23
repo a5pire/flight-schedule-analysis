@@ -32,8 +32,7 @@ class TestAnalyticsParsers:
 
             max_fdp = namedtuple('max_fdp', 'day_number fdp_hours fdp_minutes')
             trips = {2: max_fdp(day_number=2, fdp_hours=11, fdp_minutes=35),
-                     64: max_fdp(day_number=3, fdp_hours=11, fdp_minutes=40),
-                     124: max_fdp(day_number=2, fdp_hours=11, fdp_minutes=35)}
+                     64: max_fdp(day_number=3, fdp_hours=11, fdp_minutes=40)}
 
             assert test_max_fdp == trips
 
@@ -67,6 +66,18 @@ class TestAnalyticsParsers:
             assert bne_overnights == {103: 4, 104: 1, 105: 3, 109: 1, 110: 1, 112: 1, 115: 2, 118: 3, 119: 1, 120: 1,
                                       121: 2, 122: 1, 124: 1, 127: 1, 128: 1, 129: 2, 132: 4, 133: 2, 134: 2, 139: 1,
                                       142: 2, 145: 1, 147: 4, 151: 2}
+
+        def test_rest_period(self):
+            period = AnalyticsParser(TestAnalyticsParsers.test_data)
+            difference = period.rest_period()
+
+            rest_periods = namedtuple('rest_periods', 'day_number hours minutes')
+            trips = {64: rest_periods(day_number=2, hours=1, minutes=20),
+                     85: rest_periods(day_number=3, hours=1, minutes=10),
+                     134: rest_periods(day_number=3, hours=1, minutes=10),
+                     147: rest_periods(day_number=1, hours=1, minutes=35)}
+
+            assert difference == trips
 
         def test_single_sector_apw(self):
             sector = AnalyticsParser(TestAnalyticsParsers.test_data)
