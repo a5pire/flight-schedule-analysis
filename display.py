@@ -70,10 +70,18 @@ def display_data(data_file):
             print(f'Trip: {key}\tDay: {value.day_number}\tTurn time: {value.turn_time}')
 
 ########################################################################################################################
+        # layover compared with previous duty
+        layover = analytics_parsers.AnalyticsParser(analytics)
+        rest_period = layover.rest_period()
+        print()
+        print('***** Rest periods less than 2 hours greater than the previous duty *****')
+        for key, value in rest_period.items():
+            print(f'Trip: {key}\tDay: {value.day_number}\tHours: {value.hours}\tMinutes: {value.minutes}')
+
+########################################################################################################################
         # apw-syd sectors
         apw = analytics_parsers.AnalyticsParser(analytics)
         apw_sectors = apw.apw_single_sector()
-        print()
         print()
         print('***** Single sectors APW-SYD *****')
         if apw_sectors is None:
@@ -86,7 +94,6 @@ def display_data(data_file):
         # trips with brisbane overnights
         overnights = analytics_parsers.AnalyticsParser(analytics)
         bne_overnights = overnights.overnights()
-        print()
         print()
         print('***** Trips with 1 BNE overnight *****')
         for key, value in bne_overnights.items():
