@@ -122,7 +122,21 @@ class AnalyticsParser:
     def rest_period(self):
         """ Compares the flight duty period with the following rest period for that day and analyses the adequacy
         of that rest period. i.e. How close to minimum rest was it? """
-        pass
+
+        rest_periods = namedtuple('rest_periods', 'day_number hours minutes')
+        trips = defaultdict(rest_periods)
+
+        for trip in self.file:
+            for day in trip['days']:
+                if day['lay_over_hours'] > 0 and day['lay_over_minutes'] > 0:
+                    if day['lay_over_hours'] - day['flight_duty_period_hours'] < 2:
+                        trip_number = trip['trip_number']
+                        difference_hours = day['lay_over_hours'] - day['flight_duty_period_hours']
+                        difference_minutes = day['lay_over_minutes'] - day['flight_duty_period_minutes']
+                        template = rest_periods(day_number=day['day_number'], hours=difference_hours, minutes=difference_minutes)
+                        trips[trip_number] = template
+
+        return trips
 
     def apw_single_sector(self):
         """ Looks for pairings where crews operate APW-SYD (Apia - Sydney) and arrive mid morning which is NOT followed
