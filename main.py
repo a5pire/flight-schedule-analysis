@@ -4,7 +4,7 @@ import sys
 import json
 from parsers.timer import Timer
 from parsers import report_parsers
-from display import display_data
+from display import Display
 from mongo import database_insertion
 
 
@@ -124,12 +124,12 @@ def main():
     with open(output_file, 'w') as fh:  # Convert everything (including datetime object) to string
         fh.write(json.dumps(trip_list, default=str, indent=4))  # write to json file for output
 
-    display_data(output_file)   # display analytics data within the terminal
+    Display.display_data(output_file)   # display analytics data within the terminal
 
     return output_file
 
 
 if __name__ == '__main__':
     main()
-    print()
-    database_insertion(main())
+    # print()
+    # database_insertion(main())
