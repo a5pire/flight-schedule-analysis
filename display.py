@@ -31,7 +31,7 @@ class Display:
                 Display.zero_trips_found()
             else:
                 for key, value in zqn_returns.items():
-                    print(f'Trip: {key}\tTotal: {value}')
+                    print(f'Trip: {key}\tNo. Returns: {value}')
 
 ########################################################################################################################
             # max flight duty periods
@@ -56,8 +56,8 @@ class Display:
             if Display.length_is_zero(dual_paxing):
                 Display.zero_trips_found()
             else:
-                for key, value in dual_paxing.items():
-                    print(f'Trip: {key}\tDay: {value}')
+                for value in dual_paxing:
+                    print(f'Trip: {value[0]}\tDay: {value[1]}')
 
 ########################################################################################################################
             # positioning before or after a return
