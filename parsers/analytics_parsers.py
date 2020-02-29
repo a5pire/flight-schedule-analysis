@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from collections import namedtuple, defaultdict
 
 
@@ -131,8 +131,17 @@ class AnalyticsParser:
                 if day['lay_over_hours'] > 0 and day['lay_over_minutes'] > 0:
                     if day['lay_over_hours'] - day['flight_duty_period_hours'] < 2:
                         trip_number = trip['trip_number']
-                        difference_hours = day['lay_over_hours'] - day['flight_duty_period_hours']
-                        difference_minutes = day['lay_over_minutes'] - day['flight_duty_period_minutes']
+
+                        if day['lay_over_hours'] > day['flight_duty_period_hours']:
+                            difference_hours = day['lay_over_hours'] - day['flight_duty_period_hours']
+                        else:
+                            difference_hours = day['flight_duty_period_hours'] - day['lay_over_hours']
+
+                        if day['lay_over_minutes'] > day['flight_duty_period_minutes']:
+                            difference_minutes = day['lay_over_minutes'] - day['flight_duty_period_minutes']
+                        else:
+                            difference_minutes = day['flight_duty_period_minutes'] - day['lay_over_minutes']
+
                         template = rest_periods(day_number=day['day_number'], hours=difference_hours,
                                                 minutes=difference_minutes)
                         trips[trip_number] = template
