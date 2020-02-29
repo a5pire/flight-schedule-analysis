@@ -131,5 +131,5 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # print()
-    # database_insertion(main())
+    print()
+    database_insertion(main())
