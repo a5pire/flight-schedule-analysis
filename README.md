@@ -1,4 +1,7 @@
-# Flight Schedule Analysis
+###Flight Schedule Analysis
+
+---
+
 A simple command line interface parses flight schedule information from 
 a specific text file format and further analyses the generated JSON for 
 potentially fatiguing pilot duties. Output is presented to the terminal for
