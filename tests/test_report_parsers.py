@@ -1,5 +1,5 @@
 import datetime
-from parsers.report_parsers import Parser
+from analytics.report_parsers import Parser
 
 
 """

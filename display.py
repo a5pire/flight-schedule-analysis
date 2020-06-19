@@ -1,5 +1,5 @@
 import json
-from parsers import analytics_parsers
+from analytics.analytics_parsers import AnalyticsParser
 
 
 class Display:
@@ -23,7 +23,7 @@ class Display:
             analytics = json.load(f)
 
             # queenstown returns
-            zqn = analytics_parsers.AnalyticsParser(analytics)
+            zqn = AnalyticsParser(analytics)
             zqn_returns = zqn.zqn_returns()
             print()
             print(f'*****  Trips of 5 or more days that include Queenstown returns  *****')
@@ -35,7 +35,7 @@ class Display:
 
 ########################################################################################################################
             # max flight duty periods
-            fdp = analytics_parsers.AnalyticsParser(analytics)
+            fdp = AnalyticsParser(analytics)
             max_fdp = fdp.max_fdp()
             print()
             print('*****  Operating FDPs rostered within 30 minutes of max AND'
@@ -48,7 +48,7 @@ class Display:
 
 ########################################################################################################################
             # more than one positioning sector in a day
-            dual = analytics_parsers.AnalyticsParser(analytics)
+            dual = AnalyticsParser(analytics)
             dual_paxing = dual.dual_paxing_days()
             print()
             print('***** Days that consist of more than one paxing sector where the FDP is equal to or exceeding'
@@ -61,7 +61,7 @@ class Display:
 
 ########################################################################################################################
             # positioning before or after a return
-            pax = analytics_parsers.AnalyticsParser(analytics)
+            pax = AnalyticsParser(analytics)
             three_sectors = pax.three_sector_days()
             print()
             print('***** Positioning before or after a return *****')
@@ -73,7 +73,7 @@ class Display:
 
 ########################################################################################################################
             # start on early shift and finish on late shifts
-            early = analytics_parsers.AnalyticsParser(analytics)
+            early = AnalyticsParser(analytics)
             early_late = early.early_late()
             print()
             print('*****  Early to late duties within a trip  *****')
@@ -85,7 +85,7 @@ class Display:
 
 ########################################################################################################################
             # duties with excessive turn around times
-            time = analytics_parsers.AnalyticsParser(analytics)
+            time = AnalyticsParser(analytics)
             time_on_ground = time.time_on_ground()
             print()
             print('***** Sectors with excessive turn around times *****')
@@ -97,7 +97,7 @@ class Display:
 
 ########################################################################################################################
             # layover compared with previous duty
-            layover = analytics_parsers.AnalyticsParser(analytics)
+            layover = AnalyticsParser(analytics)
             rest_period = layover.rest_period()
             print()
             print('***** Rest periods less than 2 hours greater than the previous duty *****')
@@ -109,7 +109,7 @@ class Display:
 
 ########################################################################################################################
             # apw-syd sectors
-            apw = analytics_parsers.AnalyticsParser(analytics)
+            apw = AnalyticsParser(analytics)
             apw_sectors = apw.apw_single_sector()
             print()
             print('***** Single sectors APW-SYD *****')
@@ -121,7 +121,7 @@ class Display:
 
 ########################################################################################################################
             # trips with brisbane overnights
-            overnights = analytics_parsers.AnalyticsParser(analytics)
+            overnights = AnalyticsParser(analytics)
             bne_overnights = overnights.overnights()
             print()
             print('***** Trips with 1 BNE overnight *****')

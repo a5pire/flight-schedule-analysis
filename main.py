@@ -1,9 +1,18 @@
 #!/usr/bin/env python3
+""" Parses the pairings list and outputs a trip list as a json file.
+    Args:
+        -i <input_file_location>: The input file is the issued pairings report file in text file format (txt).
+        -o <output_file_location>: The output file is the json formatted trip list (parsed pairings report). This
+           file must be user defined. If no output file is specified, the default 'output_file.json' is used
+           automatically. Json extension must be used.
+    Usage:
+        python main.py -i <trip_report_file_location> -o <output_file_location>
+"""
 import argparse
 import sys
 import json
-from parsers.timer import Timer
-from parsers import report_parsers
+from analytics.timer import Timer
+from analytics.report_parsers import Parser
 from display import Display
 from mongo import database_insertion
 
@@ -13,17 +22,17 @@ OUTPUT_DEFAULT = 'output_file.json'
 
 @Timer()
 def main():
-
+    """ See 'main.py' docstring description. """
     parser = argparse.ArgumentParser(description='Process input file and save to output file.')
 
     parser.add_argument('-i',
                         '--input',
-                        help='File to process.',
+                        help='Trip report file (txt file) to process.',
                         action='store')
 
     parser.add_argument('-o',
                         '--output',
-                        help='Output file.',
+                        help='Output file (json).',
                         action='store')
 
     if len(sys.argv) == 1:
@@ -33,7 +42,7 @@ def main():
     args = parser.parse_args()
 
     if not args.input:
-        print('Please specify input file.')
+        print('Please specify the trip report input text file.')
         sys.exit(1)
 
     if args.output:
@@ -64,7 +73,7 @@ def main():
             if line.startswith('TRIP'):     # detect start of a trip (anywhere from 1-5 days long)
                 # print('Start trip' + line)
 
-                trip = report_parsers.Parser.trip_parser(line)    # create a trip(dictionary)
+                trip = Parser.trip_parser(line)    # create a trip(dictionary)
                 trip['days'] = []   # adds a day list (a list of sectors(dictionaries)) to the trip list
 
                 trip_started = True     # sets trip started to true
@@ -72,7 +81,7 @@ def main():
 
             if trip_started:    # check if the trip has started
                 if not day_started:     # check the trip has started and the new day has not started
-                    if report_parsers.Parser.new_day(line):    # if new day has not started, create a new day
+                    if Parser.new_day(line):    # if new day has not started, create a new day
                         day = {}    # create a new day dictionary on each new day
                         day['sign_on'] = line[43:48]    # gets the sign on time for that day
                         day['day_sectors'] = []     # creates an empty list for the sectors(dictionaries)
@@ -81,12 +90,12 @@ def main():
 
             if trip_started and day_started:    # detect if a day has started within a trip
 
-                if not report_parsers.Parser.end_day(line):   # make sure that day has not ended
+                if not Parser.end_day(line):   # make sure that day has not ended
                     # print('During day: ' + line)
                     day['day_number'] = line[24:26].strip()     # assign a day number to that day
 
-                    if report_parsers.Parser.in_sector(line):     # check if a sector has started
-                        day['day_sectors'].append(report_parsers.Parser.sector_parser(line))    # append sector to day
+                    if Parser.in_sector(line):     # check if a sector has started
+                        day['day_sectors'].append(Parser.sector_parser(line))    # append sector to day
 
                 else:   # if the day has ended, get the daily information
                     day['sign_off'] = line[53:58].strip()   # get sign off time from line
@@ -103,17 +112,17 @@ def main():
                 day['lay_over_minutes'] = 0     # hard coded 0 minutes
 
                 # order the day using an OrderedDict, before adding it to the trip dict
-                day_ordered = report_parsers.Parser.order_day(day)
+                day_ordered = Parser.order_day(day)
                 trip['days'].append(day_ordered)
 
             elif not day_started and '--------------------------------' in line:    # the day is over and now layover
                 lay_over = line[88:93].strip()  # get layover from line
                 day['lay_over'] = lay_over  # add to day dictionary
-                day['lay_over_hours'] = report_parsers.Parser.layover_split(lay_over)[0]    # split and convert to int
-                day['lay_over_minutes'] = report_parsers.Parser.layover_split(lay_over)[1]  # split and convert to int
+                day['lay_over_hours'] = Parser.layover_split(lay_over)[0]    # split and convert to int
+                day['lay_over_minutes'] = Parser.layover_split(lay_over)[1]  # split and convert to int
 
                 # order the day using an OrderedDict, before adding it to the trip dict
-                day_ordered = report_parsers.Parser.order_day(day)
+                day_ordered = Parser.order_day(day)
                 trip['days'].append(day_ordered)
 
             if not line[28:36].isspace() and line[27:35] == 'Sign_off':     # detect end of a trip
@@ -130,6 +139,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    data = main()
     print()
-    database_insertion(main())
+    # database_insertion(data)

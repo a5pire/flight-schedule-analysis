@@ -1,6 +1,7 @@
 import pytest
 import re
-from parsers.timer import Timer, TimerError
+from analytics.timer import Timer, TimerError
+# from analytics.timer import Timer, TimerError
 
 TIME_PREFIX = "Wasted time:"
 TIME_MESSAGE = f"{TIME_PREFIX} {{:.4f}} seconds"

@@ -1,8 +1,3 @@
-import os
-import json
-from collections import namedtuple
-from parsers.analytics_parsers import AnalyticsParser
-
 """
 Run these commands from within /pairings directory
 1. Test the greater code base (tests that run against the main code): python -m pytest -vv
@@ -11,6 +6,11 @@ Run these commands from within /pairings directory
     : coverage run -m pytest -vv (does the same as number one above but stores the data for a coverage report)
     : coverage report -m
 """
+import os
+import json
+from collections import namedtuple
+from analytics.analytics_parsers import AnalyticsParser
+
 directory = os.path.dirname(__file__)
 data = os.path.join(directory, 'test_data.json')
 

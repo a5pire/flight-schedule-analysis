@@ -1,3 +1,6 @@
+"""
+A class to manage parsing the trip reports.
+"""
 import re
 import datetime
 from collections import OrderedDict
