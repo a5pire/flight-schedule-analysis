@@ -141,4 +141,4 @@ def main():
 if __name__ == '__main__':
     data = main()
     print()
-    # database_insertion(data)
+    database_insertion(data)
