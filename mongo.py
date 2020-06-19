@@ -13,10 +13,8 @@ def database_insertion(json_file):
         database_input_file = json.load(f)  # loads json data into database input variable
 
         # connects to the mongodb server with user/pass
-        cluster = MongoClient(f"mongodb+srv://{os.getenv('mongo_user')}:{os.getenv('mongo_password')}"
-                              f"@pairings-d8pll.gcp.mongodb.net/{os.getenv('database')}?retryWrites=true&w=majority")
-
-        db = cluster['pairings']    # selects pairings database from server
+        cluster = MongoClient(os.getenv('connection_string'))
+        db = cluster[os.getenv('database')]    # selects pairings database from server
         print()
         rp = db[input('Please enter database collection name (rpXX_20XX): ')]   # creates a new collection name variable
 
