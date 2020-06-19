@@ -8,6 +8,7 @@ a specific text file format and further analyses the generated JSON for
 potentially fatiguing pilot duties. Output is presented to the terminal for
 visual analysis while a JSON file is generated and inserted into a MongoDB Atlas
 Database.
+
 ---
 ### Table of Contents
 
