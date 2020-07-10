@@ -40,20 +40,19 @@ class Parser:
     @staticmethod
     def in_sector(line):    # function to decide whether we are within a sector or not
         # check the flight number and departure port are both present
-        if not line[30:35].isspace() and not line[40:43].isspace():
-            return True
-        return False
+        return not line[30:35].isspace() and not line[40:43].isspace()
 
     @staticmethod
     def sector_parser(line):    # if we are within a sector, this function obtains the sector information
-        sector = {}
+        sector = {
+            'flight_number': line[30:35],
+            'departure_port': line[39:42],
+            'departure_time': line[43:48],
+            'destination_port': line[49:52],
+            'arrival_time': line[53:58],
+            'scheduled_time': line[60:64],
+        }
 
-        sector['flight_number'] = line[30:35]
-        sector['departure_port'] = line[39:42]
-        sector['departure_time'] = line[43:48]
-        sector['destination_port'] = line[49:52]
-        sector['arrival_time'] = line[53:58]
-        sector['scheduled_time'] = line[60:64]
 
         if line[66:70].isspace():
             sector['turn_around_time'] = None
@@ -64,11 +63,7 @@ class Parser:
             sector['turn_around_time'] = datetime.time(hour=turn_around_time_hour,
                                                        minute=turn_around_time_minute)
 
-        if line[27:30].isspace():
-            sector['is_position_flight'] = False
-        else:
-            sector['is_position_flight'] = True
-
+        sector['is_position_flight'] = False if line[27:30].isspace() else True
         return sector
 
     @staticmethod

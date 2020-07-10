@@ -6,10 +6,7 @@ class Display:
 
     @staticmethod
     def length_is_zero(method):
-        if len(method) is 0:
-            return True
-        else:
-            return False
+        return len(method) is 0
 
     @staticmethod
     def zero_trips_found():
