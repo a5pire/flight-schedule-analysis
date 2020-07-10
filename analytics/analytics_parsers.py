@@ -105,9 +105,7 @@ class AnalyticsParser:
         for trip in self.file:
             for day in trip['days']:
                 for sector in day['day_sectors']:
-                    if sector['turn_around_time'] is None:
-                        pass
-                    else:
+                    if sector['turn_around_time'] is not None:
                         time = sector['turn_around_time']
                         time_split_hour = int(time.split(':')[0])
                         time_split_minute = int(time.split(':')[1])
@@ -128,23 +126,26 @@ class AnalyticsParser:
 
         for trip in self.file:
             for day in trip['days']:
-                if day['lay_over_hours'] > 0 and day['lay_over_minutes'] > 0:
-                    if day['lay_over_hours'] - day['flight_duty_period_hours'] < 2:
-                        trip_number = trip['trip_number']
+                if (
+                    day['lay_over_hours'] > 0
+                    and day['lay_over_minutes'] > 0
+                    and day['lay_over_hours'] - day['flight_duty_period_hours'] < 2
+                ):
+                    trip_number = trip['trip_number']
 
-                        if day['lay_over_hours'] > day['flight_duty_period_hours']:
-                            difference_hours = day['lay_over_hours'] - day['flight_duty_period_hours']
-                        else:
-                            difference_hours = day['flight_duty_period_hours'] - day['lay_over_hours']
+                    if day['lay_over_hours'] > day['flight_duty_period_hours']:
+                        difference_hours = day['lay_over_hours'] - day['flight_duty_period_hours']
+                    else:
+                        difference_hours = day['flight_duty_period_hours'] - day['lay_over_hours']
 
-                        if day['lay_over_minutes'] > day['flight_duty_period_minutes']:
-                            difference_minutes = day['lay_over_minutes'] - day['flight_duty_period_minutes']
-                        else:
-                            difference_minutes = day['flight_duty_period_minutes'] - day['lay_over_minutes']
+                    if day['lay_over_minutes'] > day['flight_duty_period_minutes']:
+                        difference_minutes = day['lay_over_minutes'] - day['flight_duty_period_minutes']
+                    else:
+                        difference_minutes = day['flight_duty_period_minutes'] - day['lay_over_minutes']
 
-                        template = rest_periods(day_number=day['day_number'], hours=difference_hours,
-                                                minutes=difference_minutes)
-                        trips[trip_number] = template
+                    template = rest_periods(day_number=day['day_number'], hours=difference_hours,
+                                            minutes=difference_minutes)
+                    trips[trip_number] = template
 
         return trips
 
