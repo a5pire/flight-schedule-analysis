@@ -70,11 +70,11 @@ class AnalyticsParser:
         for trip in self.file:
             for day in trip['days']:
                 for sector in day['day_sectors']:
-                    if len(day['day_sectors']) > 2:     # make sure there is more than 2 sectors for the day
-                        if day['day_sectors'][0]['is_position_flight'] is True or \
-                                day['day_sectors'][2]['is_position_flight'] is True:
-                            # check if first or last sector for the day is positioning
-                            three_sectors.add((trip['trip_number'], day['day_number']))
+                    if len(day['day_sectors']) > 2 and (
+                        day['day_sectors'][0]['is_position_flight'] is True
+                        or day['day_sectors'][2]['is_position_flight'] is True
+                    ):  # check if first or last sector for the day is positioning
+                        three_sectors.add((trip['trip_number'], day['day_number']))
 
         return sorted(three_sectors)
 
@@ -105,9 +105,7 @@ class AnalyticsParser:
         for trip in self.file:
             for day in trip['days']:
                 for sector in day['day_sectors']:
-                    if sector['turn_around_time'] is None:
-                        pass
-                    else:
+                    if sector['turn_around_time'] is not None:
                         time = sector['turn_around_time']
                         time_split_hour = int(time.split(':')[0])
                         time_split_minute = int(time.split(':')[1])
@@ -128,23 +126,26 @@ class AnalyticsParser:
 
         for trip in self.file:
             for day in trip['days']:
-                if day['lay_over_hours'] > 0 and day['lay_over_minutes'] > 0:
-                    if day['lay_over_hours'] - day['flight_duty_period_hours'] < 2:
-                        trip_number = trip['trip_number']
+                if (
+                    day['lay_over_hours'] > 0
+                    and day['lay_over_minutes'] > 0
+                    and day['lay_over_hours'] - day['flight_duty_period_hours'] < 2
+                ):
+                    trip_number = trip['trip_number']
 
-                        if day['lay_over_hours'] > day['flight_duty_period_hours']:
-                            difference_hours = day['lay_over_hours'] - day['flight_duty_period_hours']
-                        else:
-                            difference_hours = day['flight_duty_period_hours'] - day['lay_over_hours']
+                    if day['lay_over_hours'] > day['flight_duty_period_hours']:
+                        difference_hours = day['lay_over_hours'] - day['flight_duty_period_hours']
+                    else:
+                        difference_hours = day['flight_duty_period_hours'] - day['lay_over_hours']
 
-                        if day['lay_over_minutes'] > day['flight_duty_period_minutes']:
-                            difference_minutes = day['lay_over_minutes'] - day['flight_duty_period_minutes']
-                        else:
-                            difference_minutes = day['flight_duty_period_minutes'] - day['lay_over_minutes']
+                    if day['lay_over_minutes'] > day['flight_duty_period_minutes']:
+                        difference_minutes = day['lay_over_minutes'] - day['flight_duty_period_minutes']
+                    else:
+                        difference_minutes = day['flight_duty_period_minutes'] - day['lay_over_minutes']
 
-                        template = rest_periods(day_number=day['day_number'], hours=difference_hours,
-                                                minutes=difference_minutes)
-                        trips[trip_number] = template
+                    template = rest_periods(day_number=day['day_number'], hours=difference_hours,
+                                            minutes=difference_minutes)
+                    trips[trip_number] = template
 
         return trips
 
@@ -184,15 +185,17 @@ class AnalyticsParser:
 
         for trip in self.file:
             for day in trip['days']:
-                if trip['base'] == 'CHC':
-                    if trip['number_of_days'] > 1:  # more than one day in the trip
-                        if len(day['day_sectors']) >= 1:  # more than one sector in the day
-                            if day['day_sectors'][-1]['destination_port'] == 'BNE':
-                                # check destination for the last sector of each day is Brisbane
-                                if trip['trip_number'] not in count:  # check if trip number not in count dictionary
-                                    count[trip['trip_number']] = 1  # if it's not, initialise it with one
-                                else:
-                                    count[trip['trip_number']] += 1  # if it is, add one to the count
+                if (
+                    trip['base'] == 'CHC'
+                    and trip['number_of_days'] > 1
+                    and len(day['day_sectors']) >= 1
+                    and day['day_sectors'][-1]['destination_port'] == 'BNE'
+                ):
+                    # check destination for the last sector of each day is Brisbane
+                    if trip['trip_number'] not in count:  # check if trip number not in count dictionary
+                        count[trip['trip_number']] = 1  # if it's not, initialise it with one
+                    else:
+                        count[trip['trip_number']] += 1  # if it is, add one to the count
 
         return count
 

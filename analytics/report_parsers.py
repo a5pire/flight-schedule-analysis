@@ -12,48 +12,31 @@ class Parser:
     def trip_parser(line):  # function to obtain the basic information for each trip
 
         line_list = re.split(r'\s+', line)  # splits 'TRIP' line for individual component assignment
-        # print(line_list)
-        trip = {}
-        trip['trip_number'] = int(line_list[2])
-        trip['base'] = line_list[4]
-        trip['number_of_days'] = int(line_list[6][0])
-        # print(trip['number_of_days'])
-
-        return trip
+        return {
+            'trip_number': int(line_list[2]),
+            'base': line_list[4],
+            'number_of_days': int(line_list[6][0]),
+        }
 
     @staticmethod
     def new_day(line):  # function to decide whether a new day has started or not
         # check that the departure port is empty and the sign-on time is not empty
-        if line[40:43].isspace() and not line[43:48].isspace():
-            # print('new day: ' + line)
-            return True
-        return False
+        return bool(line[40:43].isspace() and not line[43:48].isspace())
 
     @staticmethod
     def end_day(line):  # function to decide whether a day has ended or not
         # test for blank space where day of the week is listed, and non-blank space for arrival time
-        if line[22:26].isspace() and not line[53:58].isspace():
-            # print('end day: ' + line)
-            return True
-        return False
+        return bool(line[22:26].isspace() and not line[53:58].isspace())
 
     @staticmethod
     def in_sector(line):    # function to decide whether we are within a sector or not
         # check the flight number and departure port are both present
-        if not line[30:35].isspace() and not line[40:43].isspace():
-            return True
-        return False
+        return not (line[30:35].isspace() or line[40:43].isspace())
 
     @staticmethod
     def sector_parser(line):    # if we are within a sector, this function obtains the sector information
-        sector = {}
-
-        sector['flight_number'] = line[30:35]
-        sector['departure_port'] = line[39:42]
-        sector['departure_time'] = line[43:48]
-        sector['destination_port'] = line[49:52]
-        sector['arrival_time'] = line[53:58]
-        sector['scheduled_time'] = line[60:64]
+        sector = {'flight_number': line[30:35], 'departure_port': line[39:42], 'departure_time': line[43:48],
+                  'destination_port': line[49:52], 'arrival_time': line[53:58], 'scheduled_time': line[60:64]}
 
         if line[66:70].isspace():
             sector['turn_around_time'] = None
@@ -64,11 +47,7 @@ class Parser:
             sector['turn_around_time'] = datetime.time(hour=turn_around_time_hour,
                                                        minute=turn_around_time_minute)
 
-        if line[27:30].isspace():
-            sector['is_position_flight'] = False
-        else:
-            sector['is_position_flight'] = True
-
+        sector['is_position_flight'] = False if line[27:30].isspace() else True
         return sector
 
     @staticmethod
